@@ -1,0 +1,67 @@
+---
+// "¿En qué equipo jugaría?": la persona escribe su año de nacimiento y le sugerimos categoría.
+import { u } from '../lib/url';
+const tramos = [
+  { desde: 2023, hasta: 2099, nombre: 'Iniciación', slug: 'iniciacion' },
+  { desde: 2021, hasta: 2022, nombre: 'Baby', slug: 'baby' },
+  { desde: 2019, hasta: 2020, nombre: 'Prebenjamín', slug: 'prebenjamin' },
+  { desde: 2017, hasta: 2018, nombre: 'Benjamín', slug: 'benjamin' },
+  { desde: 2015, hasta: 2016, nombre: 'Alevín', slug: 'alevin' },
+  { desde: 2013, hasta: 2014, nombre: 'Infantil', slug: 'infantil' },
+  { desde: 2011, hasta: 2012, nombre: 'Cadete (masculino y femenino)', slug: 'cadete-masculino' },
+  { desde: 2008, hasta: 2010, nombre: 'Juvenil', slug: 'juvenil-autonomico' },
+  { desde: 1900, hasta: 2007, nombre: 'Senior', slug: 'senior-federado' },
+].map((t) => ({ ...t, href: u(`/equipos/${t.slug}/`) }));
+---
+<form class="yf" data-year-finder data-tramos={JSON.stringify(tramos)} onsubmit="return false">
+  <label for="yf-anio" class="yf__l">¿En qué año naciste tú o tu hijo/a?</label>
+  <div class="yf__row">
+    <input id="yf-anio" class="yf__in num" type="text" inputmode="numeric" maxlength="4" placeholder="2016" autocomplete="off" />
+    <p class="yf__out" aria-live="polite" data-out>Escribe el año y te decimos su categoría.</p>
+  </div>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-year-finder]').forEach((f) => {
+    const tramos = JSON.parse(f.dataset.tramos!) as { desde: number; hasta: number; nombre: string; href: string }[];
+    const input = f.querySelector('input')!;
+    const out = f.querySelector<HTMLElement>('[data-out]')!;
+    const render = () => {
+      const v = input.value.replace(/\D/g, '');
+      input.value = v;
+      if (v.length < 4) {
+        out.textContent = 'Escribe el año y te decimos su categoría.';
+        out.classList.remove('is-hit');
+        return;
+      }
+      const y = Number(v);
+      const t = tramos.find((t) => y >= t.desde && y <= t.hasta);
+      out.classList.remove('is-hit');
+      void out.offsetWidth; // reinicia la animación de entrada
+      if (!t || y > new Date().getFullYear()) {
+        out.textContent = 'Ese año no nos cuadra. ¿Lo revisas?';
+        return;
+      }
+      out.innerHTML = `Le corresponde <a href="${t.href}">${t.nombre}</a>. ¡Te esperamos en la pista!`;
+      out.classList.add('is-hit');
+    };
+    input.addEventListener('input', render);
+  });
+</script>
+
+<style>
+  .yf { display: grid; gap: var(--s-3); }
+  .yf__l { font-weight: 600; }
+  .yf__row { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: center; }
+  .yf__in {
+    width: 7.5ch; min-height: 3.5rem; padding: 0 var(--s-3); text-align: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 2rem; letter-spacing: 0.04em;
+    background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--radius);
+  }
+  .yf__in:focus { outline: none; box-shadow: 0 0 0 4px var(--naranja); }
+  .yf__out { flex: 1 1 14rem; font-size: var(--step-1); line-height: 1.35; }
+  .yf__out :global(a) { font-weight: 700; color: inherit; text-decoration-color: var(--naranja); text-decoration-thickness: 3px; }
+  .yf__out.is-hit { animation: hit 400ms var(--ease-out); }
+  @keyframes hit { from { opacity: 0; transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .yf__out.is-hit { animation: none; } }
+</style>

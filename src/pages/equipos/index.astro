@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import YearFinder from '../../components/YearFinder.astro';
+import { GRUPOS, equiposPorGrupo, type Grupo } from '../../data/equipos';
+const orden: Grupo[] = ['escuela', 'cantera', 'femenino', 'senior', 'inclusivo'];
+---
+<Base title="Equipos" description="Todos los equipos del Atlético Rosaleda FS: escuela (Iniciación a Alevín), cantera, cadete femenino, senior federado y de asociación, AFADE y Genuine.">
+  <PageHero
+    eyebrow="Temporada 2026/27"
+    title="Equipos"
+    lead="Cada categoría es una etapa de crecimiento. Acompañamos a nuestros jugadores desde sus primeros pasos hasta su máximo nivel."
+  >
+    <nav class="jump" aria-label="Ir a una categoría">
+      {orden.map((g) => <a href={`#${g}`}>{GRUPOS[g].titulo}</a>)}
+    </nav>
+  </PageHero>
+
+  <section class="finder">
+    <div class="wrap"><YearFinder /></div>
+  </section>
+
+  {orden.map((g, gi) => (
+    <section class={`section ${gi % 2 ? 'on-paper-2' : ''}`} id={g}>
+      <div class="wrap">
+        <div class="section-head">
+          <h2 data-reveal>{GRUPOS[g].titulo}</h2>
+          <p class="lead" data-reveal style="--i:1">{GRUPOS[g].texto}</p>
+        </div>
+        <div class="grid">
+          {equiposPorGrupo(g).map((e, i) => <TeamCard equipo={e} i={i} />)}
+        </div>
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .jump { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .jump a {
+    padding: var(--s-2) var(--s-4); border-radius: 999px; text-decoration: none; font-weight: 600; font-size: var(--step--1);
+    box-shadow: inset 0 0 0 1.5px var(--line-dark);
+    transition: background-color var(--dur-ui) ease, color var(--dur-ui) ease, transform var(--dur-press) var(--ease-out);
+  }
+  .jump a:active { transform: scale(0.97); }
+  @media (hover: hover) and (pointer: fine) { .jump a:hover { background: var(--naranja); color: var(--ink); box-shadow: none; } }
+  .finder { background: var(--naranja); padding-block: var(--s-6); }
+  .grid { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+</style>

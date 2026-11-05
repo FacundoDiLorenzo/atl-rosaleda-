@@ -1,0 +1,37 @@
+---
+import Legal from '../components/Legal.astro';
+import { CLUB } from '../config';
+---
+<Legal title="Privacidad" description="Política de privacidad del CD Atlético Rosaleda FS: cómo tratamos los datos personales que nos facilitas." updated="noviembre de 2026">
+  <h2>1. Responsable del tratamiento</h2>
+  <ul>
+    <li>Responsable: {CLUB.nombreLegal}</li>
+    <li>CIF: {CLUB.cif}</li>
+    <li>Dirección: {CLUB.domicilioLegal}</li>
+    <li>Correo electrónico: <a href={`mailto:${CLUB.email}`}>{CLUB.email}</a></li>
+    <li>Teléfono: <a href="tel:+34658346922">658 34 69 22</a></li>
+  </ul>
+  <h2>2. Finalidad del tratamiento</h2>
+  <p>Los datos personales facilitados a través de los formularios de la web podrán utilizarse para:</p>
+  <ul>
+    <li>Atender consultas y solicitudes de información.</li>
+    <li>Gestionar inscripciones deportivas.</li>
+    <li>Mantener comunicaciones relacionadas con las actividades del club.</li>
+    <li>Gestionar la relación con jugadores, familias y colaboradores.</li>
+    <li>Cumplir las obligaciones legales aplicables.</li>
+  </ul>
+  <h2>3. Legitimación</h2>
+  <p>La base legal para el tratamiento es el consentimiento del interesado, la ejecución de una relación contractual o precontractual y el cumplimiento de obligaciones legales.</p>
+  <h2>4. Conservación de los datos</h2>
+  <p>Los datos se conservarán durante el tiempo necesario para cumplir con la finalidad para la que se recabaron y mientras existan obligaciones legales derivadas de dicha relación.</p>
+  <h2>5. Destinatarios</h2>
+  <p>Los datos no se cederán a terceros salvo obligación legal o cuando resulte necesario para prestar servicios relacionados con la actividad del club (por ejemplo, el proveedor que entrega los mensajes del formulario de contacto).</p>
+  <h2>6. Derechos</h2>
+  <p>Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad escribiendo a <a href={`mailto:${CLUB.email}?subject=Protecci%C3%B3n%20de%20datos`}>{CLUB.email}</a> con el asunto «Protección de datos».</p>
+  <h2>7. Menores de edad</h2>
+  <p>Dado que gran parte de las actividades del club están dirigidas a menores, cualquier tratamiento de sus datos requerirá la autorización previa de sus padres, madres o representantes legales cuando así lo exija la normativa.</p>
+  <h2>8. Medidas de seguridad</h2>
+  <p>El club adopta las medidas técnicas y organizativas necesarias para garantizar la seguridad, confidencialidad e integridad de los datos personales.</p>
+  <h2>9. Autoridad de control</h2>
+  <p>Si consideras que tus derechos han sido vulnerados, puedes presentar una reclamación ante la <a href="https://www.aepd.es" target="_blank" rel="noopener">Agencia Española de Protección de Datos</a>.</p>
+</Legal>

@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { src } from '../lib/img';
+import { CATALOGO } from '../data/contenido';
+import { REDES } from '../config';
+---
+<Base title="Tienda oficial" description="Colección oficial del Atlético Rosaleda FS: sudaderas, abrigos, mochilas y equipaciones para jugadores, familias y afición. Pedidos por WhatsApp.">
+  <PageHero
+    eyebrow="Colección oficial"
+    title="Lleva contigo el Rosaleda"
+    lead="Equipaciones, sudaderas, mochilas y ropa deportiva para jugadores, familias y afición. Haz tu pedido por WhatsApp."
+  >
+    <a class="btn btn--primary" href={REDES.whatsapp.url} target="_blank" rel="noopener"><Icon name="whatsapp" /> Pedir por WhatsApp</a>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="products">
+        {CATALOGO.map((c, i) => (
+          <li class="prod" data-reveal style={`--i:${i}`}>
+            <div class="prod__img">
+              <img src={src(c.foto, 640)} srcset={`${src(c.foto, 480)} 480w, ${src(c.foto, 800)} 800w`} sizes="(min-width: 56rem) 30vw, 90vw" alt={`${c.nombre} del Atlético Rosaleda`} width="480" height="480" loading="lazy" />
+            </div>
+            <h2 class="prod__t">{c.nombre}</h2>
+            <p>{c.texto}</p>
+            <a class="link" href={REDES.whatsapp.url} target="_blank" rel="noopener">Consultar tallas y precio <Icon name="arrow" /></a>
+          </li>
+        ))}
+      </ul>
+      <ol class="how" aria-label="Cómo hacer un pedido">
+        <li data-reveal><span class="display">1</span> Escríbenos por WhatsApp con la prenda y la talla.</li>
+        <li data-reveal style="--i:1"><span class="display">2</span> Te confirmamos precio y plazo.</li>
+        <li data-reveal style="--i:2"><span class="display">3</span> Coordinamos la entrega contigo.</li>
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .products { list-style: none; padding: 0; display: grid; gap: var(--s-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+  .prod { display: grid; gap: var(--s-3); align-content: start; }
+  .prod__img { aspect-ratio: 1; background: var(--paper-2); border-radius: var(--radius-lg); display: grid; place-items: center; padding: var(--s-6); overflow: hidden; }
+  .prod__img img { width: 100%; height: 100%; object-fit: contain; transition: transform 600ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .prod:hover .prod__img img { transform: scale(1.04) rotate(-1.5deg); } }
+  .prod__t { font-size: var(--step-3); }
+  .prod > p { color: var(--ink-soft); }
+  .how { list-style: none; padding: 0; margin-top: var(--s-9); display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+  .how li { display: flex; gap: var(--s-4); align-items: baseline; padding: var(--s-5); background: var(--naranja-wash); border-radius: var(--radius-lg); font-weight: 550; }
+  .how .display { font-size: var(--step-4); color: var(--naranja-text); line-height: 0.8; }
+</style>

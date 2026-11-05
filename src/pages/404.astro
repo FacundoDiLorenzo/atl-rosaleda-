@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { u } from '../lib/url';
+---
+<Base title="Página no encontrada" description="La página que buscas no existe.">
+  <section class="nf on-dark">
+    <div class="wrap nf__in">
+      <p class="display nf__n" aria-hidden="true">404</p>
+      <h1 class="nf__t">Fuera de juego</h1>
+      <p class="lead">La página que buscas no existe o ha cambiado de sitio.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href={u('/')}>Volver al inicio <Icon name="arrow" class="arrow" /></a>
+        <a class="btn btn--ghost" href={u('/contacto/')}>Contacto</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 70svh; display: grid; align-items: center; padding-block: var(--s-9); }
+  .nf__in { display: grid; gap: var(--s-5); justify-items: start; }
+  .nf__n { font-size: clamp(6rem, 25vw, 18rem); color: var(--naranja); line-height: 0.8; }
+  .nf__t { font-size: var(--step-4); }
+</style>

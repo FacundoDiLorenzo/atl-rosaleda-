@@ -1,0 +1,43 @@
+---
+import Img from './Img.astro';
+interface Props { eyebrow?: string; title: string; lead?: string; image?: string; imageAlt?: string; }
+const { eyebrow, title, lead, image, imageAlt = '' } = Astro.props;
+---
+<section class={`ph on-dark ${image ? 'ph--img' : ''}`}>
+  <div class="wrap ph__in">
+    <div class="ph__text">
+      {eyebrow && <p class="eyebrow ph__e">{eyebrow}</p>}
+      <h1 class="ph__t"><span class="ph__line">{title}</span></h1>
+      {lead && <p class="lead ph__l">{lead}</p>}
+      <slot />
+    </div>
+    {image && (
+      <div class="ph__media media">
+        <Img path={image} alt={imageAlt} eager sizes="(min-width: 56rem) 45vw, 100vw" max={1280} />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .ph { padding-block: clamp(var(--s-7), 7vw, var(--s-9)) clamp(var(--s-7), 6vw, var(--s-9)); }
+  .ph__in { display: grid; gap: var(--s-7); align-items: end; }
+  @media (min-width: 56rem) { .ph--img .ph__in { grid-template-columns: 1.1fr 1fr; } }
+  .ph__text { display: grid; gap: var(--s-5); justify-items: start; }
+  .ph__t { font-size: var(--step-5); overflow: hidden; padding-block: 0.14em 0.04em; margin-top: -0.14em; }
+  .ph__line { display: block; }
+  .ph__media { aspect-ratio: 4 / 3; }
+  /* Entrada: el título sube desde su propia máscara, el resto aparece detrás con un pequeño escalonado */
+  .js .ph__line { animation: rise 900ms var(--ease-out) both; }
+  .js .ph__e { animation: fade 600ms var(--ease-out) both; }
+  .js .ph__l, .js .ph__text > :global(:not(.ph__t):not(.ph__e)) { animation: fade-up 700ms var(--ease-out) 150ms both; }
+  .js .ph__media { animation: clip 1100ms var(--ease-out) 100ms both; }
+  @keyframes rise { from { transform: translateY(105%); } }
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } }
+  @keyframes clip { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .js .ph__line, .js .ph__media { animation: fade 400ms ease both; }
+    .js .ph__l, .js .ph__text > :global(:not(.ph__t):not(.ph__e)) { animation: fade 400ms ease both; }
+  }
+</style>

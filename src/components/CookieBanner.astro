@@ -1,0 +1,59 @@
+---
+import { u } from '../lib/url';
+---
+<!-- Aviso de cookies: aceptar y rechazar tienen el mismo peso visual (criterio AEPD). -->
+<section class="cookies" data-cookies hidden aria-labelledby="cookies-t" role="region">
+  <div class="cookies__in">
+    <h2 id="cookies-t" class="cookies__t">Tu privacidad</h2>
+    <p>
+      Esta web no usa cookies de seguimiento. Solo cargamos contenido de terceros (el mapa de Google y vídeos o
+      publicaciones externas) si nos das permiso. <a href={u('/politica-de-cookies/')}>Más información</a>.
+    </p>
+    <div class="cookies__opts" data-cookie-detail hidden>
+      <label class="cookies__opt">
+        <input type="checkbox" checked disabled />
+        <span><strong>Necesarias</strong> · Guardan tu elección. Siempre activas.</span>
+      </label>
+      <label class="cookies__opt">
+        <input type="checkbox" data-cookie-externos />
+        <span><strong>Contenido externo</strong> · Google Maps y redes sociales, que pueden instalar sus propias cookies.</span>
+      </label>
+    </div>
+    <div class="cookies__btns">
+      <button type="button" class="btn btn--light" data-cookie-reject>Rechazar</button>
+      <button type="button" class="btn btn--light" data-cookie-accept>Aceptar</button>
+      <button type="button" class="cookies__cfg" data-cookie-config>Configurar</button>
+      <button type="button" class="btn btn--primary" data-cookie-save hidden>Guardar selección</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cookies {
+    position: fixed; z-index: 70; left: var(--s-3); right: var(--s-3); bottom: max(var(--s-3), env(safe-area-inset-bottom));
+    display: flex; justify-content: center; pointer-events: none;
+  }
+  .cookies[hidden] { display: none; }
+  .cookies__in {
+    pointer-events: auto; width: min(100%, 40rem);
+    background: var(--ink); color: var(--paper);
+    border-radius: var(--radius-lg); padding: var(--s-5);
+    box-shadow: 0 24px 48px -12px oklch(0.18 0.012 60 / 0.45);
+    display: grid; gap: var(--s-3);
+    transform: translateY(calc(100% + 2rem)); opacity: 0;
+    transition: transform 200ms var(--ease-out), opacity 200ms ease;
+  }
+  .cookies.is-open .cookies__in { transform: none; opacity: 1; transition: transform 500ms var(--ease-drawer), opacity 300ms ease; }
+  .cookies__t { font-family: var(--font-body); text-transform: none; font-size: var(--step-1); font-weight: 650; line-height: 1.2; }
+  .cookies p { font-size: var(--step--1); color: oklch(0.85 0.01 75); }
+  .cookies a { color: var(--naranja); }
+  .cookies__btns { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin-top: var(--s-2); }
+  .cookies__btns .btn { min-height: 2.6rem; flex: 1 1 8rem; }
+  .cookies__cfg { background: none; border: 0; color: var(--paper); text-decoration: underline; text-underline-offset: 0.2em; padding: var(--s-2); font-size: var(--step--1); }
+  .cookies__opts { display: grid; gap: var(--s-2); }
+  .cookies__opt { display: flex; gap: var(--s-3); align-items: flex-start; font-size: var(--step--1); color: oklch(0.85 0.01 75); }
+  .cookies__opt input { accent-color: var(--naranja); width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; flex: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .cookies__in, .cookies.is-open .cookies__in { transform: none; }
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Person from '../components/Person.astro';
+import { ENTRENADORES } from '../data/entrenadores';
+---
+<Base title="Entrenadores" description="Conoce al cuerpo técnico del Atlético Rosaleda FS: más de 20 entrenadores y entrenadoras al servicio de la escuela, la cantera y los equipos senior.">
+  <PageHero eyebrow="Cuerpo técnico" title="Entrenadores" lead={`${ENTRENADORES.length} entrenadores y entrenadoras que acompañan a cada jugador dentro y fuera de la pista.`} />
+  <section class="section">
+    <div class="wrap">
+      <ul class="people">
+        {ENTRENADORES.map((p, i) => <Person persona={p} i={i} />)}
+      </ul>
+    </div>
+  </section>
+</Base>

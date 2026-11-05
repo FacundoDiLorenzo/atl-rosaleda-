@@ -1,0 +1,170 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/Faq.astro';
+import { u } from '../lib/url';
+import { VALORES, HISTORIA, FAQ_CLUB } from '../data/contenido';
+import { DIRECTIVA } from '../data/entrenadores';
+import { EQUIPOS } from '../data/equipos';
+
+// Horarios: se generan desde los datos de cada equipo, así nunca se desincronizan.
+const conHorario = EQUIPOS.filter((e) => e.horario?.length);
+---
+<Base title="El club" description="Atlético Rosaleda FS nació en 2015 en Martiricos (Málaga). Conoce nuestra historia, valores, equipo directivo y horarios de entrenamiento.">
+  <PageHero
+    eyebrow="Desde 2015"
+    title="Nuestro club"
+    lead="Formamos mucho más que futbolistas. Somos una escuela de fútbol sala comprometida con el esfuerzo, el compañerismo y la pasión por este deporte."
+    image="2026/06/600_9166.jpg"
+    imageAlt="Plantilla del Atlético Rosaleda posando en la pista"
+  />
+
+  <section class="section">
+    <div class="wrap about">
+      <div class="stack">
+        <p class="eyebrow" data-reveal>Quiénes somos</p>
+        <h2 data-reveal style="--i:1">Formar personas a través del deporte</h2>
+      </div>
+      <div class="stack" data-reveal style="--i:2">
+        <p class="lead">Atlético Rosaleda es una escuela y club de fútbol sala enfocado en la formación deportiva y personal.</p>
+        <p>Nuestro proyecto se basa en el respeto, el compañerismo, la disciplina y el esfuerzo, en un entorno donde jugadores, entrenadores y familias trabajan unidos. Más allá de los resultados, nuestro objetivo es formar personas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-dark">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Valores</p>
+          <h2 data-reveal style="--i:1">Unidos por tres valores</h2>
+        </div>
+      </div>
+      <ol class="values">
+        {VALORES.map((v, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <span class="values__n display num">0{i + 1}</span>
+            <h3>{v.titulo}</h3>
+            <p>{v.texto}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap hist">
+      <div class="hist__head stack">
+        <p class="eyebrow" data-reveal>Historia</p>
+        <h2 data-reveal style="--i:1">De un grupo de amigos a más de 300 deportistas</h2>
+        <div class="media hist__media" data-reveal="clip">
+          <Img path="2026/06/MG_5326-scaled-e1780924462904.jpeg" alt="Jugadores del Atlético Rosaleda en un partido" sizes="(min-width: 56rem) 40vw, 100vw" max={1280} />
+        </div>
+      </div>
+      <ol class="timeline">
+        {HISTORIA.map((h, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <p class="timeline__y display">{h.anio}</p>
+            <p>{h.texto}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section on-paper-2">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Equipo directivo</p>
+          <h2 data-reveal style="--i:1">Quién está detrás</h2>
+        </div>
+        <p class="lead" data-reveal style="--i:2">Un equipo comprometido con el crecimiento deportivo, organizativo y social del club.</p>
+      </div>
+      <ul class="board">
+        {DIRECTIVA.map((d, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <p class="board__area">{d.area}</p>
+            <h3>{d.nombre}</h3>
+            <p class="board__cargo">{d.cargo}</p>
+            <ul>{d.funciones.map((f) => <li>{f}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+      <p class="board__more" data-reveal><a class="link" href={u('/entrenadores/')}>Ver todo el cuerpo técnico <Icon name="arrow" /></a></p>
+    </div>
+  </section>
+
+  <section class="section" id="horarios">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Horarios</p>
+          <h2 data-reveal style="--i:1">Cuándo y dónde entrenamos</h2>
+        </div>
+        <p class="lead" data-reveal style="--i:2">Escuela y cantera. Los equipos federados y senior coordinan sus horarios con su entrenador.</p>
+      </div>
+      <div class="table-wrap" data-reveal>
+        <table class="sched">
+          <thead><tr><th scope="col">Equipo</th><th scope="col">Nacidos</th><th scope="col">Días</th><th scope="col">Hora</th><th scope="col">Lugar</th></tr></thead>
+          <tbody>
+            {conHorario.flatMap((e) => e.horario!.map((h) => (
+              <tr>
+                <th scope="row"><a href={u(`/equipos/${e.slug}/`)}>{e.corto}</a></th>
+                <td class="num">{e.anios ?? '—'}</td>
+                <td>{h.dias}</td>
+                <td class="num">{h.hora}</td>
+                <td>{h.lugar ?? 'Pista de Martiricos'}</td>
+              </tr>
+            )))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-paper-2">
+    <div class="wrap faqwrap">
+      <div class="stack">
+        <p class="eyebrow" data-reveal>Preguntas</p>
+        <h2 data-reveal style="--i:1">Sobre el club</h2>
+      </div>
+      <Faq items={FAQ_CLUB} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .about { display: grid; gap: var(--s-6); }
+  @media (min-width: 56rem) { .about { grid-template-columns: 1fr 1fr; gap: var(--s-8); align-items: end; } }
+  .values { list-style: none; padding: 0; display: grid; gap: var(--s-6); }
+  @media (min-width: 48rem) { .values { grid-template-columns: repeat(3, 1fr); } }
+  .values li { border-top: 2px solid var(--naranja); padding-top: var(--s-5); display: grid; gap: var(--s-3); align-content: start; }
+  .values__n { font-size: var(--step-4); color: var(--naranja); }
+  .values p { color: oklch(0.82 0.012 75); }
+  .hist { display: grid; gap: var(--s-8); }
+  @media (min-width: 56rem) { .hist { grid-template-columns: 1fr 1fr; } .hist__head { position: sticky; top: 6rem; align-self: start; } }
+  .hist__media { aspect-ratio: 3 / 2; margin-top: var(--s-6); }
+  .timeline { list-style: none; padding: 0; border-left: 2px solid var(--line); }
+  .timeline li { position: relative; padding: 0 0 var(--s-7) var(--s-6); }
+  .timeline li::before { content: ''; position: absolute; left: -7px; top: 0.6rem; width: 12px; height: 12px; border-radius: 999px; background: var(--naranja); box-shadow: 0 0 0 4px var(--paper); }
+  .timeline__y { font-size: var(--step-3); color: var(--naranja-text); margin-bottom: var(--s-2); }
+  .board { list-style: none; padding: 0; display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  .board > li { background: var(--paper); border-radius: var(--radius-lg); padding: var(--s-6); display: grid; gap: var(--s-2); align-content: start; }
+  .board__area { font-size: var(--step--1); color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+  .board h3 { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: var(--step-3); line-height: 0.95; }
+  .board__cargo { color: var(--naranja-text); font-weight: 650; }
+  .board ul { padding-left: 1.1em; color: var(--ink-soft); font-size: var(--step--1); margin-top: var(--s-2); }
+  .board__more { margin-top: var(--s-6); }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); box-shadow: inset 0 0 0 1px var(--line); }
+  .sched { width: 100%; border-collapse: collapse; min-width: 40rem; }
+  .sched th, .sched td { text-align: left; padding: var(--s-4) var(--s-5); border-bottom: 1px solid var(--line); }
+  .sched thead th { font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-soft); background: var(--paper-2); }
+  .sched tbody tr:last-child > * { border-bottom: 0; }
+  .sched tbody th a { font-weight: 650; text-decoration-color: var(--naranja); }
+  @media (hover: hover) and (pointer: fine) { .sched tbody tr:hover { background: var(--naranja-wash); } }
+  .faqwrap { display: grid; gap: var(--s-6); }
+  @media (min-width: 56rem) { .faqwrap { grid-template-columns: 1fr 1.4fr; gap: var(--s-8); } }
+</style>

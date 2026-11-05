@@ -1,0 +1,26 @@
+---
+import { CLUB } from '../config';
+import Icon from './Icon.astro';
+const q = encodeURIComponent(CLUB.sede.mapsQuery);
+---
+<!-- El mapa de Google solo se carga si la persona acepta "contenido externo" en el aviso de cookies. -->
+<div class="map media" data-map data-src={`https://www.google.com/maps?q=${q}&output=embed`}>
+  <div class="map__ph">
+    <Icon name="pin" size={32} />
+    <p><strong>{CLUB.sede.nombre}</strong><br />{CLUB.sede.detalle}</p>
+    <div class="btn-row">
+      <button type="button" class="btn" data-map-load>Cargar mapa</button>
+      <a class="btn btn--ghost" href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noopener">Abrir en Google Maps</a>
+    </div>
+    <p class="map__note">Al cargar el mapa, Google puede instalar cookies propias.</p>
+  </div>
+</div>
+
+<style>
+  .map { aspect-ratio: 4 / 3; min-height: 20rem; border-radius: var(--radius-lg); }
+  .map__ph { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: var(--s-4); text-align: center; padding: var(--s-5); color: var(--ink); background: var(--paper-2) radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 18px 18px; }
+  .map__ph p { max-width: 32ch; }
+  .map__note { font-size: var(--step--1); color: var(--ink-soft); }
+  .map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; animation: map-in 400ms ease both; }
+  @keyframes map-in { from { opacity: 0; } }
+</style>

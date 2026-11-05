@@ -1,0 +1,61 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import { u } from '../../lib/url';
+import { NOTICIAS } from '../../data/noticias';
+const fecha = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+const [first, ...rest] = NOTICIAS;
+---
+<Base title="Noticias" description="Actualidad del Atlético Rosaleda FS: crónicas, títulos, campus de verano, nuevas alianzas y todo lo que pasa en el club.">
+  <PageHero eyebrow="Blog del club" title="Noticias" lead="El fútbol sala se vive también fuera de la pista. Novedades, historias y momentos del club." />
+
+  <section class="section">
+    <div class="wrap">
+      <article class="feat" data-reveal>
+        <div class="feat__media media">
+          {first.imagen && <Img path={first.imagen} alt={first.imagenAlt ?? ''} sizes="(min-width: 56rem) 55vw, 100vw" max={1280} />}
+        </div>
+        <div class="feat__body stack">
+          <p class="meta"><span class="chip">{first.categoria}</span> <time datetime={first.fecha}>{fecha(first.fecha)}</time></p>
+          <h2 class="feat__t"><a href={u(`/blog/${first.slug}/`)}>{first.titulo}</a></h2>
+          <p class="lead">{first.extracto}</p>
+        </div>
+      </article>
+
+      <div class="list">
+        {rest.map((n, i) => (
+          <article class="card" data-reveal style={`--i:${i}`}>
+            <div class="card__media media">
+              {n.imagen && <Img path={n.imagen} alt={n.imagenAlt ?? ''} sizes="(min-width: 56rem) 30vw, 90vw" max={960} />}
+            </div>
+            <p class="meta"><span class="chip">{n.categoria}</span> <time datetime={n.fecha}>{fecha(n.fecha)}</time></p>
+            <h2 class="card__t"><a href={u(`/blog/${n.slug}/`)}>{n.titulo}</a></h2>
+            <p class="card__x">{n.extracto}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .meta { display: flex; gap: var(--s-3); align-items: center; font-size: var(--step--1); color: var(--ink-soft); }
+  .feat, .card { position: relative; }
+  .feat a::after, .card a::after { content: ''; position: absolute; inset: 0; }
+  .feat h2 a, .card h2 a { text-decoration: none; }
+  .feat { display: grid; gap: var(--s-6); align-items: center; margin-bottom: var(--s-9); }
+  @media (min-width: 56rem) { .feat { grid-template-columns: 1.3fr 1fr; gap: var(--s-8); } }
+  .feat__media { aspect-ratio: 4 / 3; }
+  .feat__t { font-size: var(--step-4); }
+  .list { display: grid; gap: var(--s-7) var(--s-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .card { display: grid; gap: var(--s-3); align-content: start; }
+  .card__media { aspect-ratio: 3 / 2; }
+  .card__t { font-family: var(--font-body); text-transform: none; font-size: var(--step-1); font-weight: 650; line-height: 1.25; letter-spacing: -0.01em; }
+  .card__x { color: var(--ink-soft); font-size: var(--step--1); }
+  .media :global(img) { transition: transform 700ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .feat:hover .media :global(img), .card:hover .media :global(img) { transform: scale(1.03); }
+    .feat:hover h2 a, .card:hover h2 a { text-decoration: underline; text-decoration-color: var(--naranja); text-decoration-thickness: 2px; }
+  }
+</style>

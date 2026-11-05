@@ -1,0 +1,129 @@
+---
+import { CLUB, FORMULARIO } from '../config';
+import { u } from '../lib/url';
+import Icon from './Icon.astro';
+interface Props { id?: string; }
+const { id = 'contacto-form' } = Astro.props;
+const opciones = ['Escuela', 'Cantera', 'Femenino', 'Senior', 'Patrocinio', 'Otra consulta'];
+---
+<form
+  class="cf"
+  id={id}
+  novalidate
+  data-form
+  data-endpoint={FORMULARIO.endpoint}
+  data-access-key={FORMULARIO.accessKey}
+  data-mailto={CLUB.email}
+>
+  <fieldset class="cf__cats">
+    <legend>¿Qué te interesa?</legend>
+    <div class="cf__chips">
+      {opciones.map((o, i) => (
+        <label class="cf__chip">
+          <input type="radio" name="categoria" value={o} checked={i === 0} />
+          <span>{o}</span>
+        </label>
+      ))}
+    </div>
+  </fieldset>
+
+  <div class="cf__grid">
+    <div class="cf__field">
+      <label for={`${id}-nombre`}>Nombre y apellidos</label>
+      <input id={`${id}-nombre`} name="nombre" type="text" autocomplete="name" required minlength="2" />
+      <p class="cf__err" data-err-for="nombre">Dinos cómo te llamas.</p>
+    </div>
+    <div class="cf__field">
+      <label for={`${id}-tel`}>Teléfono <span class="cf__opt">(opcional)</span></label>
+      <input id={`${id}-tel`} name="telefono" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9 +()-]{9,}" />
+      <p class="cf__err" data-err-for="telefono">Revisa el número: al menos 9 dígitos.</p>
+    </div>
+    <div class="cf__field cf__field--full">
+      <label for={`${id}-email`}>Correo electrónico</label>
+      <input id={`${id}-email`} name="email" type="email" autocomplete="email" required />
+      <p class="cf__err" data-err-for="email">Necesitamos un correo válido para responderte.</p>
+    </div>
+    <div class="cf__field cf__field--full">
+      <label for={`${id}-msg`}>Mensaje</label>
+      <textarea id={`${id}-msg`} name="mensaje" rows="5" required minlength="10" placeholder="Por ejemplo: mi hijo nació en 2017 y queremos venir a probar."></textarea>
+      <p class="cf__err" data-err-for="mensaje">Cuéntanos un poco más (mínimo 10 caracteres).</p>
+    </div>
+  </div>
+
+  <!-- Antispam 1: campo trampa invisible para personas, los bots lo rellenan -->
+  <div class="cf__hp" aria-hidden="true">
+    <label for={`${id}-web`}>No rellenar</label>
+    <input id={`${id}-web`} name="web_empresa" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+  <!-- Antispam 2: tiempo mínimo de rellenado (lo completa el script) -->
+  <input type="hidden" name="_t" value="" />
+  <!-- Antispam 3 (opcional): Cloudflare Turnstile -->
+  {FORMULARIO.turnstileSiteKey && <div class="cf-turnstile" data-sitekey={FORMULARIO.turnstileSiteKey} data-language="es"></div>}
+
+  <label class="cf__check">
+    <input type="checkbox" name="privacidad" required />
+    <span>He leído y acepto la <a href={u('/politica-de-privacidad/')}>política de privacidad</a>. Usaremos tus datos solo para responder a tu consulta.</span>
+  </label>
+  <p class="cf__err" data-err-for="privacidad">Necesitamos tu consentimiento para poder responderte.</p>
+
+  <div class="cf__foot">
+    <button class="btn btn--primary cf__submit" type="submit">
+      <span class="cf__label">Enviar mensaje</span>
+      <span class="cf__spin" aria-hidden="true"></span>
+      <Icon name="arrow" class="arrow" />
+    </button>
+    <p class="cf__status" role="status" aria-live="polite" data-status></p>
+  </div>
+</form>
+
+{FORMULARIO.turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
+<style>
+  .cf { display: grid; gap: var(--s-5); }
+  .cf__cats { border: 0; padding: 0; }
+  .cf__cats legend, .cf label:not(.cf__chip):not(.cf__check) { font-weight: 600; font-size: var(--step--1); margin-bottom: var(--s-2); display: block; }
+  .cf__chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .cf__chip { position: relative; }
+  .cf__chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .cf__chip span {
+    display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 var(--s-4); border-radius: 999px;
+    box-shadow: inset 0 0 0 1.5px var(--line); font-weight: 550; font-size: var(--step--1);
+    transition: background-color var(--dur-ui) ease, box-shadow var(--dur-ui) ease, transform var(--dur-press) var(--ease-out);
+  }
+  .cf__chip input:checked + span { background: var(--ink); color: var(--paper); box-shadow: none; }
+  .cf__chip input:focus-visible + span { outline: 3px solid var(--naranja-hot); outline-offset: 2px; }
+  .cf__chip:active span { transform: scale(0.97); }
+  .cf__grid { display: grid; gap: var(--s-4); }
+  @media (min-width: 40rem) { .cf__grid { grid-template-columns: 1fr 1fr; } .cf__field--full { grid-column: 1 / -1; } }
+  .cf__opt { font-weight: 400; color: var(--ink-soft); }
+  .cf input:not([type='radio']):not([type='checkbox']), .cf textarea {
+    width: 100%; min-height: 3.1rem; padding: var(--s-3) var(--s-4);
+    border: 1.5px solid var(--line); border-radius: var(--radius); background: var(--paper);
+    font-size: max(16px, var(--step-0)); /* 16px evita el zoom en iOS */
+    transition: border-color var(--dur-ui) ease, box-shadow var(--dur-ui) ease;
+  }
+  .cf textarea { resize: vertical; min-height: 8rem; }
+  .cf input:focus, .cf textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px var(--naranja-wash); }
+  .cf [aria-invalid='true'] { border-color: var(--error) !important; }
+  .cf__err { display: none; color: var(--error); font-size: var(--step--1); margin-top: var(--s-1); }
+  .cf__err.is-shown { display: block; animation: err-in 200ms var(--ease-out); }
+  @keyframes err-in { from { opacity: 0; transform: translateY(-4px); } }
+  .cf__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .cf__check { display: flex; gap: var(--s-3); align-items: flex-start; font-size: var(--step--1); color: var(--ink-soft); }
+  .cf__check input { width: 1.25rem; height: 1.25rem; accent-color: var(--ink); flex: none; margin-top: 0.1rem; }
+  .cf__check a { color: var(--naranja-text); font-weight: 600; }
+  .cf__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-4); }
+  .cf__submit { position: relative; }
+  .cf__spin {
+    display: none; width: 1rem; height: 1rem; border-radius: 999px;
+    border: 2px solid currentColor; border-right-color: transparent; animation: spin 600ms linear infinite;
+  }
+  .cf.is-sending .cf__spin { display: block; }
+  .cf.is-sending .arrow { display: none; }
+  .cf.is-sending .cf__submit { pointer-events: none; opacity: 0.8; }
+  @keyframes spin { to { transform: rotate(1turn); } }
+  .cf__status { font-weight: 600; font-size: var(--step--1); }
+  .cf__status.is-ok { color: var(--ok); }
+  .cf__status.is-error { color: var(--error); }
+  @media (prefers-reduced-motion: reduce) { .cf__err.is-shown { animation: none; } }
+</style>
