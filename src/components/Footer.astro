@@ -1,0 +1,90 @@
+---
+import { CLUB, CONTACTOS, REDES, NAV } from '../config';
+import { u } from '../lib/url';
+import Icon from './Icon.astro';
+const year = new Date().getFullYear();
+---
+<footer class="ftr on-dark">
+  <div class="wrap ftr__cta">
+    <p class="display ftr__claim" data-reveal>¿Tienes ganas?<br /><span class="accent">Aquí hay sitio.</span></p>
+    <div class="btn-row" data-reveal style="--i:1">
+      <a class="btn btn--primary" href={u('/contacto/')}>Únete al club <Icon name="arrow" class="arrow" /></a>
+      <a class="btn btn--ghost" href={REDES.whatsapp.url} target="_blank" rel="noopener">
+        <Icon name="whatsapp" /> Escríbenos por WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap ftr__grid">
+    <div class="ftr__col">
+      <h2 class="ftr__h">Club</h2>
+      <ul>
+        <li><a href={u('/')}>Inicio</a></li>
+        {NAV.map((n) => <li><a href={u(n.href)}>{n.label}</a></li>)}
+        <li><a href={u('/entrenadores/')}>Entrenadores</a></li>
+        <li><a href={u('/contacto/')}>Contacto</a></li>
+      </ul>
+    </div>
+    <div class="ftr__col">
+      <h2 class="ftr__h">Llámanos</h2>
+      <ul class="ftr__tels">
+        {CONTACTOS.map((c) => (
+          <li>
+            <a href={`tel:${c.telefono}`}>
+              <span class="ftr__who">{c.nombre} · {c.cargo}</span>
+              <span class="num">{c.visible}</span>
+            </a>
+          </li>
+        ))}
+        <li><a href={`mailto:${CLUB.email}`}><span class="ftr__who">Correo</span><span>{CLUB.email}</span></a></li>
+      </ul>
+    </div>
+    <div class="ftr__col">
+      <h2 class="ftr__h">Dónde</h2>
+      <p>{CLUB.sede.nombre}<br />{CLUB.sede.detalle}</p>
+      <h2 class="ftr__h ftr__h--gap">Síguenos</h2>
+      <ul class="ftr__social">
+        <li><a href={REDES.instagram.url} target="_blank" rel="noopener" aria-label="Instagram"><Icon name="instagram" /></a></li>
+        <li><a href={REDES.facebook.url} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" /></a></li>
+        <li><a href={REDES.tiktok.url} target="_blank" rel="noopener" aria-label="TikTok"><Icon name="tiktok" /></a></li>
+        <li><a href={REDES.whatsapp.url} target="_blank" rel="noopener" aria-label="WhatsApp"><Icon name="whatsapp" /></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap ftr__legal">
+    <p>© {year} {CLUB.nombreLegal} · CIF {CLUB.cif}</p>
+    <ul>
+      <li><a href={u('/aviso-legal/')}>Aviso legal</a></li>
+      <li><a href={u('/politica-de-privacidad/')}>Privacidad</a></li>
+      <li><a href={u('/politica-de-cookies/')}>Cookies</a></li>
+      <li><button type="button" data-cookie-settings>Configurar cookies</button></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .ftr { padding-top: clamp(var(--s-8), 8vw, var(--s-10)); padding-bottom: var(--s-6); }
+  .ftr__cta { display: grid; gap: var(--s-6); padding-bottom: clamp(var(--s-7), 6vw, var(--s-9)); border-bottom: 1px solid var(--line-dark); }
+  @media (min-width: 56rem) { .ftr__cta { grid-template-columns: 1fr auto; align-items: end; } }
+  .ftr__claim { font-size: var(--step-5); }
+  .ftr__grid { display: grid; gap: var(--s-7); padding-block: var(--s-8); grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  .ftr__h { font-family: var(--font-body); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--naranja); margin-bottom: var(--s-4); line-height: 1.2; }
+  .ftr__h--gap { margin-top: var(--s-6); }
+  .ftr ul { list-style: none; padding: 0; display: grid; gap: var(--s-2); }
+  .ftr a { text-decoration: none; color: oklch(0.88 0.01 75); transition: color var(--dur-ui) ease; }
+  .ftr p { color: oklch(0.8 0.012 75); }
+  .ftr__tels a { display: grid; }
+  .ftr__who { font-size: var(--step--1); color: oklch(0.7 0.012 70); }
+  .ftr__tels { gap: var(--s-3) !important; }
+  .ftr__social { display: flex !important; gap: var(--s-2) !important; }
+  .ftr__social a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line-dark); transition: background-color var(--dur-ui) ease, color var(--dur-ui) ease, transform var(--dur-press) var(--ease-out); }
+  .ftr__social a:active { transform: scale(0.94); }
+  @media (hover: hover) and (pointer: fine) {
+    .ftr a:hover { color: var(--naranja); }
+    .ftr__social a:hover { background: var(--naranja); color: var(--ink); }
+  }
+  .ftr__legal { display: flex; flex-wrap: wrap; gap: var(--s-4); justify-content: space-between; padding-top: var(--s-5); border-top: 1px solid var(--line-dark); font-size: var(--step--1); }
+  .ftr__legal ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+  .ftr__legal button { background: none; border: 0; padding: 0; color: oklch(0.88 0.01 75); font-size: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
+</style>

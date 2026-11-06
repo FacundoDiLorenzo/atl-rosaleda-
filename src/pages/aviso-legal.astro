@@ -1,0 +1,27 @@
+---
+import Legal from '../components/Legal.astro';
+import { CLUB } from '../config';
+---
+<Legal title="Aviso legal" description="Aviso legal del sitio web del CD Atlético Rosaleda FS." updated="noviembre de 2026">
+  <h2>1. Datos identificativos</h2>
+  <p>En cumplimiento de la Ley 34/2002, de 11 de julio, de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa de que:</p>
+  <ul>
+    <li>Titular: {CLUB.nombreLegal}</li>
+    <li>CIF: {CLUB.cif}</li>
+    <li>Domicilio: {CLUB.domicilioLegal}</li>
+    <li>Correo electrónico: <a href={`mailto:${CLUB.email}`}>{CLUB.email}</a></li>
+    <li>Teléfono: <a href="tel:+34658346922">658 34 69 22</a></li>
+  </ul>
+  <h2>2. Objeto</h2>
+  <p>Este sitio web informa sobre las actividades deportivas, formativas y sociales del {CLUB.nombreLegal} y facilita el contacto con usuarios, familias, jugadores, patrocinadores y colaboradores.</p>
+  <h2>3. Condiciones de uso</h2>
+  <p>La navegación por este sitio web atribuye la condición de usuario e implica la aceptación de estas condiciones. El usuario se compromete a utilizar la web de forma lícita, respetando la legislación vigente, la buena fe y el orden público. Queda prohibido su uso con fines ilícitos o que puedan causar perjuicios al club o a terceros.</p>
+  <h2>4. Propiedad intelectual e industrial</h2>
+  <p>Todos los contenidos de esta web (textos, imágenes, logotipos, diseños, vídeos y documentos) son propiedad del {CLUB.nombreLegal} o cuentan con autorización para su uso. Queda prohibida su reproducción, distribución o modificación sin autorización expresa.</p>
+  <h2>5. Responsabilidad</h2>
+  <p>El club no se responsabiliza de posibles daños derivados del uso de la información de este sitio web ni de la existencia de virus u otros elementos que puedan alterar los sistemas informáticos de los usuarios.</p>
+  <h2>6. Enlaces externos</h2>
+  <p>Esta web puede contener enlaces a páginas de terceros. El club no se responsabiliza de su contenido, funcionamiento o políticas de privacidad.</p>
+  <h2>7. Legislación aplicable</h2>
+  <p>La relación entre el usuario y el titular del sitio web se rige por la normativa española vigente.</p>
+</Legal>

@@ -1,0 +1,26 @@
+---
+import { src } from '../lib/img';
+import type { Persona } from '../data/equipos';
+interface Props { persona: Persona; i?: number; }
+const { persona: p, i = 0 } = Astro.props;
+const iniciales = p.nombre.split(' ').map((s) => s[0]).slice(0, 2).join('');
+---
+<li class="person" data-reveal style={`--i:${i % 8}`}>
+  <div class="person__photo">
+    {p.foto ? (
+      <img
+        src={src(p.foto, 400)}
+        srcset={`${src(p.foto, 280)} 280w, ${src(p.foto, 400)} 400w, ${src(p.foto, 560)} 560w`}
+        sizes="(min-width: 64rem) 14vw, (min-width: 40rem) 25vw, 45vw"
+        alt={`${p.nombre}${p.rol ? `, ${p.rol}` : ''}`}
+        width="400" height="500" loading="lazy" decoding="async"
+      />
+    ) : (
+      <span class="person__initials" aria-hidden="true">{iniciales}</span>
+    )}
+  </div>
+  <div>
+    <p class="person__name">{p.nombre}</p>
+    {p.rol && <p class="person__role">{p.rol}</p>}
+  </div>
+</li>

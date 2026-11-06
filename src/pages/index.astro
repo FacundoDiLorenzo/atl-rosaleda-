@@ -1,0 +1,331 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import Marquee from '../components/Marquee.astro';
+import TeamCard from '../components/TeamCard.astro';
+import Faq from '../components/Faq.astro';
+import ContactForm from '../components/ContactForm.astro';
+import YearFinder from '../components/YearFinder.astro';
+import { u } from '../lib/url';
+import { src } from '../lib/img';
+import { equiposPorGrupo } from '../data/equipos';
+import { CIFRAS, OFRECEMOS, TESTIMONIOS, FAQ_GENERAL, CATALOGO } from '../data/contenido';
+import { NOTICIAS } from '../data/noticias';
+import { PATROCINADORES } from '../data/patrocinadores';
+import { CLUB } from '../config';
+
+const escuela = equiposPorGrupo('escuela').filter((e) => e.slug !== 'iniciacion');
+const fecha = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base
+  title={CLUB.nombre}
+  description="Escuela y club de fútbol sala en Málaga (Martiricos). 16 equipos desde Baby hasta Senior, cantera, equipo femenino e inclusivo. Ven a probar un entrenamiento."
+>
+  <!-- ============ HERO ============ -->
+  <section class="hero on-dark">
+    <div class="hero__media">
+      <Img path="2026/06/MG_5290-2-scaled.jpeg" alt="Jugadores del Atlético Rosaleda celebran un gol en la pista" eager sizes="100vw" />
+    </div>
+    <div class="wrap hero__in">
+      <p class="eyebrow hero__e">{CLUB.lema} · Málaga</p>
+      <h1 class="hero__t">
+        <span class="hero__m"><span style="--d:0">Escuela y club</span></span>
+        <span class="hero__m"><span style="--d:1">de <em class="accent">fútbol sala</em></span></span>
+      </h1>
+      <p class="lead hero__l">Formamos jugadores dentro y fuera de la pista, desde la base hasta la competición.</p>
+      <div class="btn-row hero__cta">
+        <a class="btn btn--primary" href={u('/contacto/')}>Ven a probar un entreno <Icon name="arrow" class="arrow" /></a>
+        <a class="btn btn--ghost" href={u('/equipos/')}>Ver todos los equipos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CIFRAS ============ -->
+  <section class="stats on-dark" aria-label="El club en cifras">
+    <dl class="wrap stats__grid">
+      {CIFRAS.map((c, i) => (
+        <div class="stat" data-reveal style={`--i:${i}`}>
+          <dt>{c.etiqueta}</dt>
+          <dd class="display num"><span data-count={c.valor}>{c.valor}</span>{c.sufijo}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <!-- ============ QUÉ OFRECEMOS ============ -->
+  <section class="section">
+    <div class="wrap offer">
+      <div class="offer__text stack-lg">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Lo que ofrecemos</p>
+          <h2 data-reveal style="--i:1">Cada jugador crece <span class="accent">a su ritmo</span></h2>
+          <p class="lead" data-reveal style="--i:2">
+            Formación deportiva de calidad en un entorno cercano, familiar y competitivo. Más que un club,
+            una familia que se cuida dentro y fuera de la pista.
+          </p>
+        </div>
+        <ol class="offer__list">
+          {OFRECEMOS.map((o, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <span class="offer__n num">0{i + 1}</span>
+              <div>
+                <h3>{o.titulo}</h3>
+                <p>{o.texto}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <a class="link" href={u('/el-club/')} data-reveal>Conoce el club <Icon name="arrow" /></a>
+      </div>
+      <div class="offer__media media" data-reveal="clip">
+        <Img path="2026/06/MG_2879-3-scaled.jpeg" alt="Entrenamiento de fútbol sala en la pista del Atlético Rosaleda" sizes="(min-width: 56rem) 45vw, 100vw" max={1280} />
+      </div>
+    </div>
+  </section>
+
+  <Marquee />
+
+  <!-- ============ EQUIPOS / BUSCADOR POR AÑO ============ -->
+  <section class="section on-paper-2">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Escuela</p>
+          <h2 data-reveal style="--i:1">Encuentra tu equipo</h2>
+        </div>
+        <div data-reveal style="--i:2"><YearFinder /></div>
+      </div>
+      <div class="teams">
+        {escuela.map((e, i) => <TeamCard equipo={e} i={i} />)}
+      </div>
+      <div class="more" data-reveal>
+        <a class="btn" href={u('/equipos/')}>Ver cantera, senior, femenino e inclusivo <Icon name="arrow" class="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CAPTACIÓN FEMENINO ============ -->
+  <section class="fem on-dark">
+    <div class="fem__media" data-reveal="clip">
+      <Img path="2026/06/600_9253-e1781631149255.jpg" alt="Jugadora del Atlético Rosaleda con el balón" sizes="(min-width: 56rem) 50vw, 100vw" max={1280} />
+    </div>
+    <div class="fem__text stack-lg">
+      <p class="eyebrow" data-reveal>Captación abierta</p>
+      <h2 data-reveal style="--i:1">Buscamos jugadoras para el <span class="accent">cadete femenino</span></h2>
+      <p class="lead" data-reveal style="--i:2">No hace falta experiencia: solo ganas de aprender, competir y formar parte de un equipo que crece cada temporada.</p>
+      <div class="btn-row" data-reveal style="--i:3">
+        <a class="btn btn--primary" href={u('/contacto/')}>Quiero probar <Icon name="arrow" class="arrow" /></a>
+        <a class="btn btn--ghost" href={u('/equipos/cadete-femenino/')}>Conoce al equipo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIOS ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Familias y afición</p>
+          <h2 data-reveal style="--i:1">Lo que dicen de nosotros</h2>
+        </div>
+      </div>
+    </div>
+    <ul class="quotes" tabindex="0" aria-label="Opiniones (desliza para ver más)">
+      {TESTIMONIOS.map((t, i) => (
+        <li class="quote" data-reveal style={`--i:${i}`}>
+          <blockquote>
+            <p>“{t.texto}”</p>
+          </blockquote>
+          <p class="quote__by">{t.autor}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ============ NOTICIAS ============ -->
+  <section class="section on-paper-2">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Actualidad</p>
+          <h2 data-reveal style="--i:1">Últimas noticias</h2>
+        </div>
+        <a class="link" href={u('/blog/')} data-reveal>Todas las noticias <Icon name="arrow" /></a>
+      </div>
+      <div class="news">
+        {NOTICIAS.slice(0, 3).map((n, i) => (
+          <article class="nc" data-reveal style={`--i:${i}`}>
+            <div class="nc__media media">
+              {n.imagen && <Img path={n.imagen} alt={n.imagenAlt ?? ''} sizes="(min-width: 56rem) 30vw, 90vw" max={960} />}
+            </div>
+            <p class="nc__meta"><span class="chip">{n.categoria}</span> <time datetime={n.fecha}>{fecha(n.fecha)}</time></p>
+            <h3><a href={u(`/blog/${n.slug}/`)}>{n.titulo}</a></h3>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PATROCINADORES + TIENDA ============ -->
+  <section class="section">
+    <div class="wrap duo">
+      <div class="duo__card on-dark stack-lg" data-reveal>
+        <div class="stack">
+          <p class="eyebrow">Patrocinadores</p>
+          <h2 class="duo__t">Haz crecer tu marca con el deporte del barrio</h2>
+          <p class="lead">Conecta cada semana con familias, jugadores y afición. Gracias a quienes ya nos acompañan.</p>
+        </div>
+        <ul class="logos">
+          {PATROCINADORES.slice(0, 8).map((p) => (
+            <li><img src={src(p.logo, 160)} srcset={`${src(p.logo, 160)} 1x, ${src(p.logo, 320)} 2x`} alt={p.nombre} width="80" height="80" loading="lazy" /></li>
+          ))}
+        </ul>
+        <a class="btn btn--primary" href={u('/patrocinadores/')}>Ver patrocinadores <Icon name="arrow" class="arrow" /></a>
+      </div>
+      <div class="duo__card duo__card--shop stack-lg" data-reveal style="--i:1">
+        <div class="stack">
+          <p class="eyebrow">Tienda oficial</p>
+          <h2 class="duo__t">Lleva contigo el Atlético Rosaleda</h2>
+          <p class="lead">Sudaderas, abrigos y mochilas oficiales. Pídelo por WhatsApp.</p>
+        </div>
+        <ul class="shop">
+          {CATALOGO.map((c) => (
+            <li><img src={src(c.foto, 320)} alt={c.nombre} width="160" height="160" loading="lazy" /></li>
+          ))}
+        </ul>
+        <a class="btn" href={u('/catalogo/')}>Ver catálogo <Icon name="arrow" class="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ + CONTACTO ============ -->
+  <section class="section on-paper-2" id="contacto">
+    <div class="wrap split">
+      <div class="stack-lg">
+        <div class="stack">
+          <p class="eyebrow" data-reveal>Dudas frecuentes</p>
+          <h2 data-reveal style="--i:1">Antes de apuntarte</h2>
+        </div>
+        <Faq items={FAQ_GENERAL} />
+      </div>
+      <div class="split__form" data-reveal style="--i:1">
+        <h2 class="split__t">Queremos conocerte</h2>
+        <p class="split__p">Cuéntanos qué buscas y te respondemos con horarios, categoría y cómo empezar.</p>
+        <ContactForm id="form-home" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: min(92svh, 56rem); display: grid; align-items: end; isolation: isolate; overflow: hidden; }
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__media :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 60% 30%; }
+  .hero__media::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, oklch(0.18 0.012 60 / 0.95) 0%, oklch(0.18 0.012 60 / 0.55) 40%, oklch(0.18 0.012 60 / 0.1) 75%),
+      linear-gradient(to right, oklch(0.18 0.012 60 / 0.6), transparent 60%);
+  }
+  .hero__in { padding-block: var(--s-10) clamp(var(--s-7), 6vw, var(--s-9)); display: grid; gap: var(--s-5); justify-items: start; }
+  .hero__t { font-size: clamp(3.4rem, 1.6rem + 8.5vw, 10rem); line-height: 0.86; }
+  .hero__t em { font-style: normal; }
+  .hero__m { display: block; overflow: hidden; padding-block: 0.14em 0.06em; margin-block: -0.14em -0.06em; }
+  .hero__m > span { display: block; }
+  .hero__l { max-width: 40ch; }
+
+  /* Entrada del hero: la foto se asienta, el título sube línea a línea desde su máscara */
+  .js .hero__media :global(img) { animation: settle 1800ms var(--ease-out) both; }
+  .js .hero__m > span { animation: rise 1000ms var(--ease-out) both; animation-delay: calc(120ms + var(--d) * 90ms); }
+  .js .hero__e { animation: fade 700ms ease both; }
+  .js .hero__l { animation: fade-up 800ms var(--ease-out) 380ms both; }
+  .js .hero__cta { animation: fade-up 800ms var(--ease-out) 480ms both; }
+  @keyframes settle { from { transform: scale(1.08); } }
+  @keyframes rise { from { transform: translateY(105%); } }
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(14px); } }
+
+  /* ---------- Cifras ---------- */
+  .stats { border-top: 1px solid var(--line-dark); }
+  .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 48rem) { .stats__grid { grid-template-columns: repeat(4, 1fr); } }
+  .stat { padding: var(--s-6) var(--s-4) var(--s-6) 0; display: flex; flex-direction: column-reverse; gap: var(--s-2); border-bottom: 1px solid var(--line-dark); }
+  @media (min-width: 48rem) { .stat { border-bottom: 0; padding-block: var(--s-7); } .stat + .stat { border-left: 1px solid var(--line-dark); padding-left: var(--s-5); } }
+  .stat dd { font-size: var(--step-4); color: var(--naranja); line-height: 0.9; }
+  .stat dt { color: oklch(0.82 0.012 75); font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+
+  /* ---------- Ofrecemos ---------- */
+  .offer { display: grid; gap: var(--s-8); align-items: center; }
+  @media (min-width: 56rem) { .offer { grid-template-columns: 1fr 1fr; } }
+  .offer__media { aspect-ratio: 4 / 5; }
+  .offer__list { list-style: none; padding: 0; display: grid; border-top: 1px solid var(--line); }
+  .offer__list li { display: grid; grid-template-columns: 3rem 1fr; gap: var(--s-4); padding-block: var(--s-5); border-bottom: 1px solid var(--line); }
+  .offer__n { font-family: var(--font-display); font-weight: 800; font-size: var(--step-2); color: var(--naranja-text); line-height: 1; }
+  .offer__list p { color: var(--ink-soft); margin-top: var(--s-1); }
+
+  /* ---------- Equipos ---------- */
+  .teams { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+  .more { margin-top: var(--s-7); display: flex; justify-content: center; }
+
+  /* ---------- Femenino ---------- */
+  .fem { display: grid; }
+  @media (min-width: 56rem) { .fem { grid-template-columns: 1fr 1fr; min-height: 36rem; } }
+  .fem__media { position: relative; min-height: 22rem; }
+  .fem__media :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .fem__text { padding: clamp(var(--s-7), 6vw, var(--s-9)) var(--gutter); align-self: center; max-width: 40rem; }
+
+  /* ---------- Testimonios: carrusel nativo con scroll-snap ---------- */
+  .quotes {
+    list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: min(85vw, 26rem); gap: var(--s-4);
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    padding: 0 var(--gutter) var(--s-4); overscroll-behavior-x: contain; scrollbar-width: thin;
+  }
+  @media (min-width: 82rem) { .quotes { padding-inline: calc((100vw - var(--max)) / 2); scroll-padding-inline: calc((100vw - var(--max)) / 2); } }
+  .quote { scroll-snap-align: start; display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-6); padding: var(--s-6); border-radius: var(--radius-lg); background: var(--paper-2); }
+  .quote:nth-child(3n + 1) { background: var(--naranja-wash); }
+  .quote blockquote p { font-size: var(--step-1); line-height: 1.45; }
+  .quote__by { font-weight: 650; font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ---------- Noticias ---------- */
+  .news { display: grid; gap: var(--s-6); grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+  .nc { position: relative; display: grid; gap: var(--s-3); align-content: start; }
+  .nc__media { aspect-ratio: 3 / 2; }
+  .nc__media :global(img) { transition: transform 700ms var(--ease-out); }
+  .nc__meta { display: flex; gap: var(--s-3); align-items: center; font-size: var(--step--1); color: var(--ink-soft); }
+  .nc h3 a { text-decoration: none; }
+  .nc h3 a::after { content: ''; position: absolute; inset: 0; }
+  @media (hover: hover) and (pointer: fine) {
+    .nc:hover .nc__media :global(img) { transform: scale(1.04); }
+    .nc:hover h3 a { text-decoration: underline; text-decoration-color: var(--naranja); text-decoration-thickness: 2px; }
+  }
+
+  /* ---------- Patrocinadores + tienda ---------- */
+  .duo { display: grid; gap: var(--s-4); }
+  @media (min-width: 56rem) { .duo { grid-template-columns: 1.2fr 1fr; } }
+  .duo__card { padding: clamp(var(--s-6), 4vw, var(--s-8)); border-radius: var(--radius-lg); display: flex; flex-direction: column; align-items: flex-start; }
+  .duo__card--shop { background: var(--naranja); }
+  .duo__card--shop .eyebrow, .duo__card--shop .lead { color: var(--ink); }
+  .duo__t { font-size: var(--step-3); }
+  .logos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-3); width: 100%; }
+  .logos li { aspect-ratio: 1; background: var(--paper); border-radius: var(--radius); display: grid; place-items: center; padding: var(--s-2); }
+  .logos img { width: 100%; height: 100%; object-fit: contain; }
+  .shop { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-3); width: 100%; }
+  .shop li { aspect-ratio: 1; background: oklch(1 0 0 / 0.35); border-radius: var(--radius); display: grid; place-items: center; padding: var(--s-2); }
+  .shop img { width: 100%; height: 100%; object-fit: contain; transition: transform 500ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .shop li:hover img { transform: translateY(-4px) rotate(-2deg); } }
+  .duo__card > .btn { margin-top: auto; }
+
+  /* ---------- FAQ + formulario ---------- */
+  .split { display: grid; gap: var(--s-8); align-items: start; }
+  @media (min-width: 64rem) { .split { grid-template-columns: 1fr 1fr; } }
+  .split__form { background: var(--paper); border-radius: var(--radius-lg); padding: clamp(var(--s-5), 4vw, var(--s-7)); box-shadow: 0 1px 0 var(--line), 0 24px 48px -32px oklch(0.18 0.012 60 / 0.3); }
+  .split__t { font-size: var(--step-3); }
+  .split__p { color: var(--ink-soft); margin: var(--s-3) 0 var(--s-6); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .hero__media :global(img) { animation: none; }
+    .js .hero__m > span, .js .hero__l, .js .hero__cta { animation: fade 500ms ease both; }
+  }
+</style>

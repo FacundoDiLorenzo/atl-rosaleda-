@@ -1,0 +1,77 @@
+---
+import '@fontsource-variable/big-shoulders-display';
+import '@fontsource-variable/instrument-sans';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { CLUB, CONTACTOS, REDES } from '../config';
+import { src } from '../lib/img';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noFooterCta?: boolean;
+}
+const { title, description, image = '2026/06/MG_5290-2-scaled.jpeg', type = 'website' } = Astro.props;
+const fullTitle = title === CLUB.nombre ? `${CLUB.nombre} · Escuela y club de fútbol sala en Málaga` : `${title} · ${CLUB.nombre}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = src(image, 1200);
+const logo = src('2026/05/Rosaleda-1.png', 512);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsClub',
+  name: CLUB.nombre,
+  legalName: CLUB.nombreLegal,
+  sport: 'Futsal',
+  url: Astro.site?.toString(),
+  logo,
+  email: CLUB.email,
+  telephone: CONTACTOS[0].telefono,
+  foundingDate: String(CLUB.fundacion),
+  address: { '@type': 'PostalAddress', streetAddress: 'Plaza Conde de Ferrería 8', postalCode: '29009', addressLocality: 'Málaga', addressCountry: 'ES' },
+  sameAs: [REDES.instagram.url, REDES.facebook.url, REDES.tiktok.url],
+};
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#1c1712" />
+    <link rel="icon" href={src('2026/05/Rosaleda-1.png', 64)} />
+    <link rel="apple-touch-icon" href={src('2026/05/Rosaleda-1.png', 180)} />
+    <link rel="preconnect" href="https://i0.wp.com" crossorigin />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={CLUB.nombre} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <!-- Marca que JS está activo antes de pintar: evita parpadeos en las animaciones de entrada -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+    <CookieBanner />
+    <script>
+      import '../scripts/main.ts';
+    </script>
+  </body>
+</html>

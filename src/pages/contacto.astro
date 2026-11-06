@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import Icon from '../components/Icon.astro';
+import { CLUB, CONTACTOS, REDES } from '../config';
+---
+<Base title="Contacto" description="Contacta con el Atlético Rosaleda FS: teléfonos del presidente, administración, secretaría y entrenadores, WhatsApp, correo y formulario. Pista de Martiricos, Málaga.">
+  <PageHero eyebrow="Queremos conocerte" title="Contacto" lead="¿Quieres apuntarte, venir a probar o patrocinar al club? Llámanos, escríbenos por WhatsApp o déjanos un mensaje." />
+
+  <section class="section">
+    <div class="wrap grid">
+      <div class="stack-lg">
+        <ul class="phones">
+          {CONTACTOS.map((c, i) => (
+            <li data-reveal style={`--i:${i}`}>
+              <a href={`tel:${c.telefono}`}>
+                <span class="phones__who"><strong>{c.nombre}</strong><span>{c.cargo}</span></span>
+                <span class="phones__n num">{c.visible}</span>
+                <span class="phones__ic"><Icon name="phone" /></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div class="quick" data-reveal>
+          <a class="btn btn--primary" href={REDES.whatsapp.url} target="_blank" rel="noopener"><Icon name="whatsapp" /> WhatsApp</a>
+          <a class="btn" href={`mailto:${CLUB.email}`}><Icon name="mail" /> {CLUB.email}</a>
+        </div>
+        <div data-reveal><MapEmbed /></div>
+      </div>
+      <div class="formbox" data-reveal style="--i:1">
+        <h2 class="formbox__t">Escríbenos</h2>
+        <ContactForm id="form-contacto" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid { display: grid; gap: var(--s-8); align-items: start; }
+  @media (min-width: 64rem) { .grid { grid-template-columns: 1fr 1fr; } }
+  .phones { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .phones a {
+    display: grid; grid-template-columns: 1fr auto auto; gap: var(--s-4); align-items: center;
+    padding: var(--s-5) 0; border-bottom: 1px solid var(--line); text-decoration: none;
+  }
+  .phones__who { display: grid; }
+  .phones__who span { font-size: var(--step--1); color: var(--ink-soft); }
+  .phones__n { font-weight: 650; font-size: var(--step-1); }
+  .phones__ic {
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: var(--paper-2);
+    transition: background-color var(--dur-ui) ease, transform var(--dur-press) var(--ease-out);
+  }
+  .phones a:active .phones__ic { transform: scale(0.94); }
+  @media (hover: hover) and (pointer: fine) { .phones a:hover .phones__ic { background: var(--naranja); } }
+  @media (max-width: 30rem) { .phones__n { display: none; } }
+  .quick { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  .quick .btn { white-space: normal; }
+  .formbox { background: var(--paper-2); border-radius: var(--radius-lg); padding: clamp(var(--s-5), 4vw, var(--s-7)); }
+  .formbox__t { font-size: var(--step-3); margin-bottom: var(--s-5); }
+</style>

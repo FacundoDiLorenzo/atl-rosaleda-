@@ -1,0 +1,132 @@
+---
+import { NAV } from '../config';
+import { u } from '../lib/url';
+import { src } from '../lib/img';
+import Icon from './Icon.astro';
+const path = Astro.url.pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const isActive = (href: string) => path.startsWith(base + href);
+---
+<header class="hdr" data-header>
+  <div class="hdr__in wrap">
+    <a href={u('/')} class="hdr__brand" aria-label="Atlético Rosaleda FS, ir al inicio">
+      <img src={src('2026/05/Rosaleda-1.png', 112)} alt="" width="44" height="44" />
+      <span class="hdr__name">Atlético<br />Rosaleda <span class="accent">FS</span></span>
+    </a>
+    <nav class="hdr__nav" aria-label="Principal">
+      <ul>
+        {NAV.map((item) => (
+          <li><a href={u(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <div class="hdr__actions">
+      <a class="btn btn--primary hdr__cta" href={u('/contacto/')}>Únete al club</a>
+      <button class="hdr__toggle" type="button" aria-expanded="false" aria-controls="menu-movil" data-menu-open>
+        <Icon name="menu" size={24} />
+        <span class="sr-only">Abrir menú</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" id="menu-movil" data-drawer hidden>
+  <div class="drawer__scrim" data-menu-close></div>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Menú">
+    <div class="drawer__top">
+      <span class="eyebrow">Menú</span>
+      <button class="hdr__toggle" type="button" data-menu-close>
+        <Icon name="close" size={24} />
+        <span class="sr-only">Cerrar menú</span>
+      </button>
+    </div>
+    <ul class="drawer__list">
+      <li style="--i:0"><a href={u('/')}>Inicio</a></li>
+      {NAV.map((item, i) => (
+        <li style={`--i:${i + 1}`}><a href={u(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a></li>
+      ))}
+      <li style={`--i:${NAV.length + 1}`}><a href={u('/contacto/')}>Contacto</a></li>
+    </ul>
+    <a class="btn btn--primary drawer__cta" href={u('/contacto/')}>Únete al club <Icon name="arrow" class="arrow" /></a>
+  </div>
+</div>
+
+<style>
+  .hdr {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--ink); color: var(--paper);
+    transition: transform 320ms var(--ease-out);
+  }
+  .hdr.is-hidden { transform: translateY(-100%); }
+  .hdr__in { display: flex; align-items: center; justify-content: space-between; gap: var(--s-5); min-height: 4.5rem; }
+  .hdr__brand { display: flex; align-items: center; gap: var(--s-3); text-decoration: none; }
+  .hdr__brand img { width: 44px; height: 44px; }
+  .hdr__name { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; line-height: 0.9; font-size: 1.15rem; letter-spacing: 0.01em; }
+  .hdr__nav ul { display: flex; gap: var(--s-1); list-style: none; padding: 0; }
+  .hdr__nav a {
+    position: relative; display: block; padding: var(--s-2) var(--s-3);
+    text-decoration: none; font-weight: 550; font-size: 0.95rem; color: oklch(0.86 0.01 75);
+    transition: color var(--dur-ui) ease;
+  }
+  .hdr__nav a::after {
+    content: ''; position: absolute; left: var(--s-3); right: var(--s-3); bottom: 2px; height: 2px;
+    background: var(--naranja); transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur-ui) var(--ease-out);
+  }
+  .hdr__nav a[aria-current='page'] { color: var(--paper); }
+  .hdr__nav a[aria-current='page']::after { transform: scaleX(1); }
+  @media (hover: hover) and (pointer: fine) {
+    .hdr__nav a:hover { color: var(--paper); }
+    .hdr__nav a:hover::after { transform: scaleX(1); }
+  }
+  .hdr__actions { display: flex; align-items: center; gap: var(--s-2); }
+  .hdr__cta { min-height: 2.6rem; padding-inline: var(--s-4); font-size: 0.95rem; }
+  .hdr__toggle {
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+    background: transparent; border: 0; border-radius: 999px; color: inherit;
+    transition: transform var(--dur-press) var(--ease-out), background-color var(--dur-ui) ease;
+  }
+  .hdr__toggle:active { transform: scale(0.94); }
+  @media (min-width: 64rem) { .hdr__toggle { display: none; } }
+  @media (max-width: 63.99rem) { .hdr__nav { display: none; } }
+  @media (max-width: 30rem) { .hdr__cta { display: none; } }
+
+  /* Drawer: entra con curva tipo iOS, sale más rápido */
+  .drawer { position: fixed; inset: 0; z-index: 60; }
+  .drawer[hidden] { display: none; }
+  .drawer__scrim {
+    position: absolute; inset: 0; background: oklch(0.18 0.012 60 / 0.5);
+    opacity: 0; transition: opacity 200ms ease;
+  }
+  .drawer__panel {
+    position: absolute; inset: 0 0 0 auto; width: min(100%, 26rem);
+    background: var(--ink); color: var(--paper);
+    display: flex; flex-direction: column; gap: var(--s-6);
+    padding: var(--s-4) var(--gutter) max(var(--s-6), env(safe-area-inset-bottom));
+    transform: translateX(100%);
+    transition: transform 240ms var(--ease-out);
+    overflow-y: auto; overscroll-behavior: contain;
+  }
+  .drawer.is-open .drawer__scrim { opacity: 1; }
+  .drawer.is-open .drawer__panel { transform: none; transition: transform 460ms var(--ease-drawer); }
+  .drawer__top { display: flex; justify-content: space-between; align-items: center; min-height: 3.5rem; }
+  .drawer__list { list-style: none; padding: 0; display: grid; gap: var(--s-1); }
+  .drawer__list a {
+    display: block; padding: var(--s-2) 0; text-decoration: none;
+    font-family: var(--font-display); font-weight: 800; text-transform: uppercase;
+    font-size: clamp(2.2rem, 9vw, 2.8rem); line-height: 1;
+  }
+  .drawer__list a[aria-current='page'] { color: var(--naranja); }
+  .drawer__list li { opacity: 0; transform: translateX(24px); transition: opacity 200ms ease, transform 200ms var(--ease-out); }
+  .drawer.is-open .drawer__list li {
+    opacity: 1; transform: none;
+    transition: opacity 400ms var(--ease-out), transform 500ms var(--ease-out);
+    transition-delay: calc(80ms + var(--i) * 40ms);
+  }
+  .drawer__cta { margin-top: auto; }
+  @media (prefers-reduced-motion: reduce) {
+    .drawer__panel, .drawer.is-open .drawer__panel { transform: none; transition: opacity 200ms ease; opacity: 0; }
+    .drawer.is-open .drawer__panel { opacity: 1; }
+    .drawer__list li, .drawer.is-open .drawer__list li { transform: none; transition-delay: 0ms; }
+  }
+</style>

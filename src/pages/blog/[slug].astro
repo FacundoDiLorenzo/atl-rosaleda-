@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import { u } from '../../lib/url';
+import { NOTICIAS, type Noticia } from '../../data/noticias';
+export function getStaticPaths() {
+  return NOTICIAS.map((noticia) => ({ params: { slug: noticia.slug }, props: { noticia } }));
+}
+interface Props { noticia: Noticia }
+const { noticia: n } = Astro.props;
+const fecha = new Date(n.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+const otras = NOTICIAS.filter((x) => x.slug !== n.slug).slice(0, 2);
+---
+<Base title={n.titulo} description={n.extracto} image={n.imagen} type="article">
+  <article>
+    <header class="ah on-dark">
+      <div class="wrap ah__in">
+        <a class="link back" href={u('/blog/')}><span class="flip"><Icon name="arrow" /></span> Noticias</a>
+        <p class="meta"><span class="chip">{n.categoria}</span> <time datetime={n.fecha}>{fecha}</time></p>
+        <h1 class="ah__t">{n.titulo}</h1>
+        <p class="lead">{n.extracto}</p>
+      </div>
+    </header>
+    {n.imagen && (
+      <div class="wrap ah__media">
+        <div class="media" data-reveal="clip">
+          <Img path={n.imagen} alt={n.imagenAlt ?? ''} eager sizes="(min-width: 64rem) 60rem, 100vw" max={1920} />
+        </div>
+      </div>
+    )}
+    <div class="wrap body">
+      <div class="prose">
+        {n.cuerpo.map((b) => ('h' in b ? <h2>{b.h}</h2> : 'p' in b ? <p>{b.p}</p> : <ul>{b.ul.map((li) => <li>{li}</li>)}</ul>))}
+      </div>
+    </div>
+  </article>
+
+  <section class="section on-paper-2">
+    <div class="wrap">
+      <h2 class="more__t">Sigue leyendo</h2>
+      <ul class="more">
+        {otras.map((o) => (
+          <li><a href={u(`/blog/${o.slug}/`)}><span class="chip">{o.categoria}</span><span class="more__n">{o.titulo}</span><Icon name="arrow" /></a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ah { padding-block: var(--s-8) var(--s-10); }
+  .ah__in { display: grid; gap: var(--s-5); justify-items: start; max-width: 60rem; }
+  .ah__t { font-size: var(--step-4); }
+  .back { color: var(--naranja); }
+  .flip { display: inline-flex; transform: scaleX(-1); }
+  .meta { display: flex; gap: var(--s-3); align-items: center; font-size: var(--step--1); color: oklch(0.8 0.012 75); }
+  .ah__media { margin-top: calc(-1 * var(--s-9)); max-width: 60rem; }
+  .ah__media .media { aspect-ratio: 16 / 10; }
+  .body { max-width: 44rem; padding-block: var(--s-8) var(--s-9); }
+  .more__t { font-size: var(--step-3); margin-bottom: var(--s-5); }
+  .more { list-style: none; padding: 0; border-top: 1px solid var(--line); }
+  .more a { display: flex; gap: var(--s-4); align-items: center; padding: var(--s-5) 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .more__n { flex: 1; font-weight: 650; font-size: var(--step-1); line-height: 1.3; }
+  .more :global(svg) { transition: transform var(--dur-ui) var(--ease-out); flex: none; }
+  @media (hover: hover) and (pointer: fine) { .more a:hover :global(svg) { transform: translateX(4px); } .more a:hover .more__n { color: var(--naranja-text); } }
+</style>

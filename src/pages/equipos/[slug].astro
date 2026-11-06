@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Person from '../../components/Person.astro';
+import TeamCard from '../../components/TeamCard.astro';
+import Icon from '../../components/Icon.astro';
+import { u } from '../../lib/url';
+import { EQUIPOS, GRUPOS, type Equipo } from '../../data/equipos';
+import { REDES } from '../../config';
+
+export function getStaticPaths() {
+  return EQUIPOS.map((equipo) => ({ params: { slug: equipo.slug }, props: { equipo } }));
+}
+interface Props { equipo: Equipo }
+const { equipo: e } = Astro.props;
+const hermanos = EQUIPOS.filter((x) => x.grupo === e.grupo && x.slug !== e.slug).slice(0, 4);
+const desc = `${e.nombre} del Atlético Rosaleda FS${e.anios ? ` (nacidos ${e.anios.replace(/ · /g, '-')})` : ''}. ${e.resumen}`.slice(0, 158);
+---
+<Base title={e.nombre} description={desc} image={e.foto}>
+  <PageHero eyebrow={GRUPOS[e.grupo].titulo} title={e.corto} lead={e.resumen} image={e.foto} imageAlt={`Equipo ${e.corto} del Atlético Rosaleda`}>
+    <dl class="facts">
+      {e.anios && <div><dt>Nacidos</dt><dd class="num">{e.anios}</dd></div>}
+      {e.competicion && <div><dt>Competición</dt><dd>{e.competicion}</dd></div>}
+      {e.horario?.map((h) => <div><dt>Entrena</dt><dd>{h.dias}, <span class="num">{h.hora}</span>{h.lugar && <><br />{h.lugar}</>}</dd></div>)}
+    </dl>
+    {e.destacado && <p class="trophy"><span aria-hidden="true">🏆</span> {e.destacado}</p>}
+  </PageHero>
+
+  {(e.tecnicos?.length || e.jugadores?.length) ? (
+    <section class="section">
+      <div class="wrap stack-lg">
+        {e.tecnicos?.length && (
+          <div>
+            <h2 class="sub" data-reveal>Cuerpo técnico</h2>
+            <ul class="people">{e.tecnicos.map((p, i) => <Person persona={p} i={i} />)}</ul>
+          </div>
+        )}
+        {e.jugadores?.length && (
+          <div>
+            <h2 class="sub" data-reveal>Plantilla <span class="count num">{e.jugadores.length}</span></h2>
+            <ul class="people">{e.jugadores.map((p, i) => <Person persona={p} i={i} />)}</ul>
+          </div>
+        )}
+      </div>
+    </section>
+  ) : (
+    <section class="section">
+      <div class="wrap empty" data-reveal>
+        <h2 class="sub">Plantilla en preparación</h2>
+        <p class="lead">Estamos actualizando las fotos de esta temporada. Mientras tanto, si quieres formar parte del equipo o tienes cualquier duda, escríbenos.</p>
+      </div>
+    </section>
+  )}
+
+  <section class="section--tight on-dark">
+    <div class="wrap join">
+      <h2 class="join__t" data-reveal>{e.captacion ? '¿Quieres jugar en este equipo?' : '¿Tienes dudas sobre este equipo?'}</h2>
+      <div class="btn-row" data-reveal style="--i:1">
+        <a class="btn btn--primary" href={u('/contacto/')}>{e.captacion ? 'Ven a probar' : 'Contactar'} <Icon name="arrow" class="arrow" /></a>
+        <a class="btn btn--ghost" href={REDES.whatsapp.url} target="_blank" rel="noopener"><Icon name="whatsapp" /> WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  {hermanos.length > 0 && (
+    <section class="section on-paper-2">
+      <div class="wrap">
+        <h2 class="sub" data-reveal>Más equipos de {GRUPOS[e.grupo].titulo.toLowerCase()}</h2>
+        <div class="grid">{hermanos.map((h, i) => <TeamCard equipo={h} i={i} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .facts { display: grid; gap: var(--s-4) var(--s-6); grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); width: 100%; border-top: 1px solid var(--line-dark); padding-top: var(--s-5); }
+  .facts dt { font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; color: var(--naranja); font-weight: 600; }
+  .facts dd { margin-top: var(--s-1); }
+  .trophy { background: var(--naranja); color: var(--ink); padding: var(--s-2) var(--s-4); border-radius: 999px; font-weight: 650; }
+  .sub { font-size: var(--step-3); margin-bottom: var(--s-6); display: flex; align-items: baseline; gap: var(--s-3); }
+  .count { font-size: 0.5em; color: var(--naranja-text); }
+  .empty { max-width: 44rem; }
+  .join { display: flex; flex-wrap: wrap; gap: var(--s-5); align-items: center; justify-content: space-between; }
+  .join__t { font-size: var(--step-3); }
+  .grid { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+</style>
